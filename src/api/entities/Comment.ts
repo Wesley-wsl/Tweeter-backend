@@ -1,0 +1,72 @@
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    ManyToMany,
+    JoinColumn,
+    BaseEntity,
+} from "typeorm";
+
+import { Tweet } from "./Tweet";
+import { User } from "./User";
+
+@Entity("comments")
+export class Comment extends BaseEntity {
+    @PrimaryGeneratedColumn("uuid")
+    readonly id!: string;
+
+    @Column({
+        type: "uuid",
+    })
+    author_id!: string;
+
+    @ManyToOne(() => User, user => user.comments)
+    @JoinColumn({
+        name: "author_id",
+    })
+    author!: User;
+
+    @Column({
+        type: "uuid",
+    })
+    tweet_id!: string;
+
+    @ManyToOne(() => Tweet)
+    @JoinColumn({
+        name: "tweet_id",
+    })
+    tweet!: Tweet;
+
+    @Column()
+    comment!: string;
+
+    @Column()
+    likes!: number;
+
+    @Column({
+        type: "uuid",
+        nullable: true,
+    })
+    liked_users_id!: string[];
+
+    @ManyToMany(() => User)
+    @JoinColumn({
+        name: "liked_users_id",
+    })
+    liked_users!: User[];
+
+    @Column({
+        type: "varchar",
+        nullable: true,
+    })
+    image!: string;
+
+    @CreateDateColumn()
+    created_at!: Date;
+
+    @UpdateDateColumn()
+    updated_at!: Date;
+}
