@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { compare } from "bcrypt";
 
 import { IBcryptProvider } from "../IBcryptProvider";
