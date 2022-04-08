@@ -7,6 +7,7 @@ import {
     Entity,
     Generated,
     JoinColumn,
+    JoinTable,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -44,24 +45,11 @@ export class User extends BaseEntity {
     })
     background!: string;
 
-    @Column({
-        type: "uuid",
-        nullable: true,
-    })
-    following_id!: string[];
-
-    @Column({
-        type: "uuid",
-        nullable: true,
-    })
-    followers_id!: string[];
-
-    @ManyToMany(() => User)
-    @JoinColumn()
+    @ManyToMany(() => User, user => user.followers)
     following!: User[];
 
-    @ManyToMany(() => User)
-    @JoinColumn()
+    @ManyToMany(() => User, user => user.following)
+    @JoinTable()
     followers!: User[];
 
     @Column({
