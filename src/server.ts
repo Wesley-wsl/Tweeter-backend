@@ -7,7 +7,7 @@ import { resolve } from "path";
 
 import { AppDataSource } from "./api/database";
 import { errorHandler } from "./api/middlewares/errorHandler";
-import { userRouter } from "./api/routes";
+import { tweetRouter, userRouter } from "./api/routes";
 
 config();
 AppDataSource.initialize();
@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/files", express.static(resolve(__dirname, "..", "uploads")));
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/tweet", tweetRouter);
 app.use(errorHandler);
 
 app.listen(process.env.PORT || 3333, () => console.log("Server is running."));
