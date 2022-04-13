@@ -1,6 +1,6 @@
 import { InMemoryBcryptProvider } from "../../../tests/providers/In-memory-bcrypt-provider";
 import { InMemoryUsersRepository } from "../../../tests/repositories/In-memory-users-repository";
-import { User } from "../../entities/User";
+import { IUser } from "../../interfaces/User";
 import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
 
 describe("#AuthenticateUser", () => {
@@ -17,7 +17,7 @@ describe("#AuthenticateUser", () => {
             password: "1234",
         };
 
-        inMemoryUsersRepository.items.push(createUser as User);
+        inMemoryUsersRepository.items.push(createUser as IUser);
 
         const user = {
             email: "jorkis@gmail.com",
@@ -42,7 +42,7 @@ describe("#AuthenticateUser", () => {
             password: "1234",
         };
 
-        inMemoryUsersRepository.items.push(createUser as User);
+        inMemoryUsersRepository.items.push(createUser as IUser);
 
         const user = {
             email: "anotheremail@gmail.com",
@@ -68,7 +68,7 @@ describe("#AuthenticateUser", () => {
             password: "1234",
         };
 
-        inMemoryUsersRepository.items.push(createUser as User);
+        inMemoryUsersRepository.items.push(createUser as IUser);
 
         const user = {
             email: "jorkis@gmail.com",
@@ -94,7 +94,7 @@ describe("#AuthenticateUser", () => {
             password: "1234",
         };
 
-        inMemoryUsersRepository.items.push(createUser as User);
+        inMemoryUsersRepository.items.push(createUser as IUser);
 
         const user = {
             email: "jorkis@gmail.com",

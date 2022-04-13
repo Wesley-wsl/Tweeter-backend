@@ -17,7 +17,9 @@ export class FollowerUserUseCase {
         delete userToFollow.password;
 
         user.following.push(userToFollow);
+        user.followingCount += 1;
         userToFollow.followers.push(user);
+        userToFollow.followersCount += 1;
         await this.usersRepository.save(user);
         await this.usersRepository.save(userToFollow);
     }

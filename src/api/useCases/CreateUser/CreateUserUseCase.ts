@@ -18,7 +18,6 @@ export class CreateUserUseCase {
             name,
             email,
             password: passwordHashed,
-            
         });
 
         await this.usersRepository.save(userCreated);

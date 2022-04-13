@@ -1,5 +1,5 @@
 import { InMemoryUsersRepository } from "../../../tests/repositories/In-memory-users-repository";
-import { User } from "../../entities/User";
+import { IUser } from "../../interfaces/User";
 import { EditUserUseCase } from "./EditUserUseCase";
 
 describe("#EditUser", () => {
@@ -16,7 +16,7 @@ describe("#EditUser", () => {
             email: "jorkis10@gmail.com",
         };
 
-        const response = sut.execute(user as User);
+        const response = sut.execute(user as IUser);
 
         await expect(response).rejects.toEqual(new Error("User not found"));
     });
@@ -43,8 +43,8 @@ describe("#EditUser", () => {
             email: "jorkis@gmail.com",
         };
 
-        inMemoryUsersRepository.items.push(user as User);
-        inMemoryUsersRepository.items.push(userWithAnotherEmail as User);
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userWithAnotherEmail as IUser);
 
         const userEdited = {
             id: "1234",
@@ -54,7 +54,7 @@ describe("#EditUser", () => {
             avatar: "AvatarImage10",
             email: "jorkis@gmail.com",
         };
-        const response = sut.execute(userEdited as User);
+        const response = sut.execute(userEdited as IUser);
 
         await expect(response).rejects.toEqual(new Error("Email already used"));
     });
@@ -72,7 +72,7 @@ describe("#EditUser", () => {
             email: "jorkis10@gmail.com",
         };
 
-        inMemoryUsersRepository.items.push(user as User);
+        inMemoryUsersRepository.items.push(user as IUser);
 
         const userEdited = {
             id: "1234",
@@ -82,7 +82,7 @@ describe("#EditUser", () => {
             avatar: "AnotherAvatarImage",
             email: "jorkis@gmail.com",
         };
-        const response = await sut.execute(userEdited as User);
+        const response = await sut.execute(userEdited as IUser);
 
         expect(response).toBeTruthy();
         expect(response.name).toEqual(userEdited.name);
@@ -105,11 +105,11 @@ describe("#EditUser", () => {
             email: "jorkis10@gmail.com",
         };
 
-        inMemoryUsersRepository.items.push(user as User);
+        inMemoryUsersRepository.items.push(user as IUser);
 
         const userEdited = {
             id: "1234",
-        } as User;
+        } as IUser;
         const response = await sut.execute(userEdited);
 
         expect(response).toBeTruthy();

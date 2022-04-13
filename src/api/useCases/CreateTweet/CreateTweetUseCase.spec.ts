@@ -1,6 +1,7 @@
 import { InMemoryTweetsRepository } from "../../../tests/repositories/In-memory-tweets-repository";
 import { InMemoryUsersRepository } from "../../../tests/repositories/In-memory-users-repository";
 import { User } from "../../entities/User";
+import { IUser } from "../../interfaces/User";
 import { CreateTweetUseCase } from "./CreateTweetUseCase";
 
 describe("#CreateTweet", () => {
@@ -34,7 +35,7 @@ describe("#CreateTweet", () => {
             name: "Jorkis",
         };
 
-        inMemoryUsersRepository.items.push(author as User);
+        inMemoryUsersRepository.items.push(author as IUser);
 
         const tweetInformations = {
             content: "A Content random.",
@@ -62,7 +63,7 @@ describe("#CreateTweet", () => {
             tweets: [],
         };
 
-        inMemoryUsersRepository.items.push(author as any);
+        inMemoryUsersRepository.items.push(author as unknown as IUser);
 
         const tweetInformations = {
             content: "A Content random.",
