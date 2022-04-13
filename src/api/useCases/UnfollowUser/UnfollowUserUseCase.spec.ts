@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InMemoryUsersRepository } from "../../../tests/repositories/In-memory-users-repository";
 import { User } from "../../entities/User";
+import { IUser } from "../../interfaces/User";
 import { UnfollowUserUseCase } from "./UnfollowUserUseCase";
 
 describe("#FollowerUser", () => {
@@ -12,7 +12,7 @@ describe("#FollowerUser", () => {
             name: "Jorkis",
         };
 
-        inMemoryUsersRepository.items.push(userToUnfollow as User);
+        inMemoryUsersRepository.items.push(userToUnfollow as IUser);
         const response = sut.execute({ userId: "20", id: userToUnfollow.id });
         await expect(response).rejects.toEqual(new Error("User not found"));
     });
@@ -25,7 +25,7 @@ describe("#FollowerUser", () => {
             name: "Jorkis",
         };
 
-        inMemoryUsersRepository.items.push(user as User);
+        inMemoryUsersRepository.items.push(user as IUser);
         const response = sut.execute({ userId: user.id, id: "20" });
 
         await expect(response).rejects.toEqual(
@@ -39,13 +39,13 @@ describe("#FollowerUser", () => {
         const user = {
             id: "1",
             name: "Jorkis",
-            followers: [],
+            followers: [] as User[],
             following: [
                 {
                     id: "2",
                     name: "Jorkis",
-                    followers: [],
-                    following: [],
+                    followers: [] as User[],
+                    following: [] as User[],
                 },
             ],
         };
@@ -58,11 +58,11 @@ describe("#FollowerUser", () => {
                     name: "Jorkis",
                 },
             ],
-            following: [],
+            following: [] as User[],
         };
 
-        inMemoryUsersRepository.items.push(user as any);
-        inMemoryUsersRepository.items.push(userToUnfollow as any);
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userToUnfollow as IUser);
 
         const response = await sut.execute({
             userId: user.id,
