@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { IBcryptProvider } from "../../api/providers/IBcryptProvider";
 
 export class InMemoryBcryptProvider implements IBcryptProvider {
