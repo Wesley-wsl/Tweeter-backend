@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+import { User } from "../../entities/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 export class ShowFollowingUseCase {
@@ -6,6 +8,13 @@ export class ShowFollowingUseCase {
     async execute(id: string) {
         const user = await this.postgresUsersRepository.findById(id, true);
         if (!user) throw new Error("User not found");
-        return user.following;
+
+        const userWithoutPassword: User[] = [];
+        user.following.forEach(following => {
+            delete following.password;
+            userWithoutPassword.push(following);
+        });
+
+        return userWithoutPassword;
     }
 }
