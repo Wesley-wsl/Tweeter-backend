@@ -45,6 +45,7 @@ describe("#FollowerUser", () => {
         const userToFollow = {
             id: "1",
             name: "Jorkis",
+            followers: [] as User[],
         };
 
         inMemoryUsersRepository.items.push(userToFollow as IUser);
@@ -84,6 +85,7 @@ describe("#FollowerUser", () => {
         const userToFollow = {
             id: "1",
             name: "Jorkis",
+            followers: [] as User[],
         };
 
         inMemoryUsersRepository.items.push(user as IUser);
@@ -93,5 +95,27 @@ describe("#FollowerUser", () => {
         await expect(response).rejects.toEqual(
             new Error("User can't follow themselves"),
         );
+    });
+
+    it("Shouldn't follow if followers is not found", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new FollowerUserUseCase(inMemoryUsersRepository);
+
+        const user = {
+            id: "1",
+            name: "Jorkis",
+        };
+
+        const userToFollow = {
+            id: "2",
+            name: "Jorkis",
+        };
+
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userToFollow as IUser);
+
+        const response = sut.execute({ userId: user.id, id: userToFollow.id });
+
+        await expect(response).rejects.toEqual(new Error("Follower not found"));
     });
 });

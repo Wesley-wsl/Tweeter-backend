@@ -17,6 +17,8 @@ export class UnfollowUserUseCase {
         const followingFiltered = user.following.filter(
             following => following.id !== userToUnfollow.id,
         );
+        if (!userToUnfollow.followers) throw new Error("Followers not found");
+
         const followersFiltered = userToUnfollow.followers.filter(
             followers => followers.id !== user.id,
         );

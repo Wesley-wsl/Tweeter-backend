@@ -30,4 +30,16 @@ describe("#ShowFollowers", () => {
 
         await expect(response).rejects.toEqual(new Error("User not found"));
     });
+
+    it("Shouldn't show followers by user if user is not found", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new ShowFollowersUseCase(inMemoryUsersRepository);
+        const user = {
+            id: "2",
+        };
+
+        inMemoryUsersRepository.items.push(user as IUser);
+        const response = sut.execute(user.id);
+        await expect(response).rejects.toEqual(new Error("Follower not found"));
+    });
 });

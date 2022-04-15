@@ -33,6 +33,34 @@ describe("#FollowerUser", () => {
         );
     });
 
+    it("Shouldn't unfollow a user if followers is not found", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new UnfollowUserUseCase(inMemoryUsersRepository);
+        const user = {
+            id: "2",
+            name: "Jorkis",
+        };
+
+        const userOne = {
+            id: "1",
+            name: "Jorkis",
+            following: [
+                {
+                    id: "2",
+                    name: "Jorkis",
+                    following: [] as User[],
+                },
+            ],
+        };
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userOne as IUser);
+        const response = sut.execute({ userId: userOne.id, id: user.id });
+
+        await expect(response).rejects.toEqual(
+            new Error("Followers not found"),
+        );
+    });
+
     it("Should unfollow a user", async () => {
         const inMemoryUsersRepository = new InMemoryUsersRepository();
         const sut = new UnfollowUserUseCase(inMemoryUsersRepository);

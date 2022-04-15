@@ -11,7 +11,9 @@ export class ShowTweetsUseCase {
 
         tweets.forEach(tweet => {
             if (tweet.isPublic === "false") {
-                const isFollowing = tweet.author.followers?.some(
+                if (!tweet.author.followers)
+                    throw new Error("Follower not found");
+                const isFollowing = tweet.author.followers.some(
                     follower => follower.id === userId,
                 );
                 delete tweet.author.followers;

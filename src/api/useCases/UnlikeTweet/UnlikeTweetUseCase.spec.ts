@@ -86,4 +86,40 @@ describe("#LikeTweet", () => {
 
         await expect(response).rejects.toEqual(new Error("User not found"));
     });
+
+    it("Shouldn't unlike tweet if tweet don't has liked", async () => {
+        const inMemoryTweetsRepository = new InMemoryTweetsRepository();
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new UnlikeTweetUseCase(
+            inMemoryTweetsRepository,
+            inMemoryUsersRepository,
+        );
+
+        const user = {
+            id: "3",
+            bookmarks_id: [],
+            bookmarks: [],
+            liked_tweets: [],
+            liked_tweets_id: [],
+        };
+
+        inMemoryUsersRepository.items.push(user as unknown as IUser);
+
+        const tweet = {
+            id: "2",
+            users_saved_id: [],
+            liked_users_id: [],
+        };
+
+        inMemoryTweetsRepository.items.push(tweet as unknown as Tweet);
+
+        const response = sut.execute({
+            userId: user.id,
+            tweetId: tweet.id,
+        });
+
+        await expect(response).rejects.toEqual(
+            new Error("Tweet don't has liked"),
+        );
+    });
 });

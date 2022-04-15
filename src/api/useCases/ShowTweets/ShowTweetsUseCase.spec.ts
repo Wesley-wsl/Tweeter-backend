@@ -87,4 +87,35 @@ describe("#ShowTweets", () => {
         const response = await sut.execute(user.id);
         expect(response[0].isPublic).toEqual("false");
     });
+    it("Shouldn't list tweets private by user if followers is not found", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const inMemoryTweetsRepository = new InMemoryTweetsRepository();
+        const sut = new ShowTweetsUseCase(inMemoryTweetsRepository);
+        const user = {
+            id: "2",
+            following: [
+                {
+                    id: "1",
+                },
+            ],
+        };
+        const userTwo = {
+            id: "1",
+        };
+
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userTwo as IUser);
+
+        const tweet = {
+            id: "123423243423",
+            author_id: "1",
+            isPublic: "false",
+            author: {},
+        };
+
+        inMemoryTweetsRepository.items.push(tweet as Tweet);
+
+        const response = sut.execute(user.id);
+        await expect(response).rejects.toEqual(new Error("Follower not found"));
+    });
 });

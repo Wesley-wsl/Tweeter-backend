@@ -16,6 +16,8 @@ export class FollowerUserUseCase {
         delete user.password;
         delete userToFollow.password;
 
+        if (!userToFollow.followers) throw new Error("Follower not found");
+
         user.following.push(userToFollow);
         user.followingCount += 1;
         userToFollow.followers.push(user);
