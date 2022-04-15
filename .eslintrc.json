@@ -25,6 +25,7 @@
         "import/extensions": "off",
         "import/no-unresolved": "off",
         "class-methods-use-this": "off",
+        "camelcase": "off",
         "import-helpers/order-imports": [
             "warn",
             {
