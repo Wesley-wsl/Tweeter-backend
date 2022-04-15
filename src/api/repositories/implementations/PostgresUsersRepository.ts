@@ -2,13 +2,17 @@ import { User } from "../../entities/User";
 import { IUsersRepository } from "../IUsersRepository";
 
 export class PostgresUserRepository implements IUsersRepository {
+    public async findAllUsers(): Promise<User[]> {
+        return User.find();
+    }
+
     public async findByEmail(
         email: string,
         relation?: boolean,
     ): Promise<User | null> {
         const user = await User.findOne({
             where: { email },
-            relations: relation ? ["following", "followers"] : [],
+            relations: relation ? ["following", "followers", "tweets"] : [],
         });
         return user;
     }
@@ -19,7 +23,9 @@ export class PostgresUserRepository implements IUsersRepository {
     ): Promise<User | null> {
         return User.findOne({
             where: { id },
-            relations: relation ? ["following", "followers"] : [],
+            relations: relation
+                ? ["following", "followers", "tweets", "bookmarks"]
+                : [],
         });
     }
 
