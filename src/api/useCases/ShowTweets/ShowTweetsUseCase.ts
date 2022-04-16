@@ -18,7 +18,8 @@ export class ShowTweetsUseCase {
                 );
                 delete tweet.author.followers;
                 delete tweet.author.password;
-                if (isFollowing) tweetFiltered.push(tweet);
+                if (isFollowing || tweet.author_id === userId)
+                    tweetFiltered.push(tweet);
             }
             delete tweet.author.followers;
             delete tweet.author.password;

@@ -19,9 +19,10 @@ export class ShowTweetByUserUseCase {
         const tweetWithoutPassword: Tweet[] = [];
 
         if (!isFollowing || isFollowing.length === 0) {
-            const tweetsFiltered = tweets.filter(
-                tweet => tweet.isPublic === "true",
-            );
+            const tweetsFiltered = tweets.filter(tweet => {
+                if (tweet.author_id === userId) return tweet;
+                return tweet.isPublic === "true";
+            });
             tweetsFiltered.forEach(tweet => {
                 delete tweet.author.password;
                 tweetWithoutPassword.push(tweet);
