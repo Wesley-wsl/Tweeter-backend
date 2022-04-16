@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
+    JoinTable,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -31,39 +32,49 @@ export class Tweet extends BaseEntity {
     })
     author!: User;
 
-    @Column()
+    @Column({
+        default: 0,
+    })
     likes!: number;
 
     @Column({
         type: "uuid",
-        nullable: true,
+        default: [],
+        array: true,
     })
     liked_users_id!: string[];
 
-    @ManyToMany(() => User)
-    @JoinColumn({
-        name: "liked_users_id",
-    })
-    liked_users!: User[];
-
     @Column({
         type: "uuid",
-        nullable: true,
+        array: true,
+        default: [],
     })
     retweets_id!: string[];
 
     @ManyToMany(() => Tweet)
-    @JoinColumn({
+    @JoinTable({
         name: "retweets_id",
     })
     retweet!: Tweet[];
 
-    @Column()
-    image!: string;
-
     @Column({
         type: "uuid",
         nullable: true,
+    })
+    tweet_id: string;
+
+    @Column({
+        nullable: true,
+    })
+    image?: string;
+
+    @Column()
+    content!: string;
+
+    @Column({
+        type: "uuid",
+        array: true,
+        default: [],
     })
     comments_id!: string[];
 
@@ -73,20 +84,17 @@ export class Tweet extends BaseEntity {
     })
     comments!: Comment[];
 
-    @Column()
-    public!: boolean;
+    @Column({
+        default: "true",
+    })
+    isPublic!: string;
 
     @Column({
         type: "uuid",
-        nullable: true,
+        default: [],
+        array: true,
     })
     users_saved_id!: string[];
-
-    @ManyToMany(() => User)
-    @JoinColumn({
-        name: "users_saved_id",
-    })
-    saved!: User[];
 
     @CreateDateColumn()
     created_at!: Date;

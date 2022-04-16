@@ -5,7 +5,6 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
-    ManyToMany,
     JoinColumn,
     BaseEntity,
 } from "typeorm";
@@ -23,7 +22,7 @@ export class Comment extends BaseEntity {
     })
     author_id!: string;
 
-    @ManyToOne(() => User, user => user.comments)
+    @ManyToOne(() => User)
     @JoinColumn({
         name: "author_id",
     })
@@ -34,7 +33,7 @@ export class Comment extends BaseEntity {
     })
     tweet_id!: string;
 
-    @ManyToOne(() => Tweet)
+    @ManyToOne(() => Tweet, tweet => tweet.comments)
     @JoinColumn({
         name: "tweet_id",
     })
@@ -43,20 +42,17 @@ export class Comment extends BaseEntity {
     @Column()
     comment!: string;
 
-    @Column()
+    @Column({
+        default: 0,
+    })
     likes!: number;
 
     @Column({
         type: "uuid",
-        nullable: true,
+        default: [],
+        array: true,
     })
     liked_users_id!: string[];
-
-    @ManyToMany(() => User)
-    @JoinColumn({
-        name: "liked_users_id",
-    })
-    liked_users!: User[];
 
     @Column({
         type: "varchar",

@@ -1,21 +1,17 @@
 /* eslint-disable no-use-before-define */
-import { Exclude } from "class-transformer";
 import {
     BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
-    Generated,
     JoinColumn,
     JoinTable,
     ManyToMany,
-    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 
-import { Comment } from "./Comment";
 import { Tweet } from "./Tweet";
 
 @Entity("users")
@@ -31,7 +27,6 @@ export class User extends BaseEntity {
     })
     email!: string;
 
-    @Exclude()
     @Column()
     password?: string;
 
@@ -45,23 +40,27 @@ export class User extends BaseEntity {
     })
     background!: string;
 
+    @Column({
+        default: 0,
+    })
+    followingCount!: number;
+
+    @Column({
+        default: 0,
+    })
+    followersCount!: number;
+
     @ManyToMany(() => User, user => user.followers)
     following!: User[];
 
     @ManyToMany(() => User, user => user.following)
     @JoinTable()
-    followers!: User[];
+    followers?: User[];
 
     @Column({
         default: "",
     })
     about_me!: string;
-
-    @Column({
-        type: "uuid",
-        nullable: true,
-    })
-    tweets_id!: string[];
 
     @OneToMany(() => Tweet, tweet => tweet.author)
     @JoinColumn()
@@ -69,54 +68,38 @@ export class User extends BaseEntity {
 
     @Column({
         type: "uuid",
-        nullable: true,
+        default: [],
+        array: true,
     })
     liked_tweets_id!: string[];
 
-    @ManyToMany(() => Tweet)
-    @JoinColumn()
+    @OneToMany(() => Tweet, tweet => tweet.liked_users_id)
+    @JoinColumn({ name: "liked_tweets_id" })
     liked_tweets!: Tweet[];
 
     @Column({
         type: "uuid",
-        nullable: true,
-    })
-    comments_id!: string[];
-
-    @OneToMany(() => Comment, comment => comment.comment)
-    @JoinColumn()
-    comments!: Comment[];
-
-    @Column({
-        type: "uuid",
-        nullable: true,
+        array: true,
+        default: [],
     })
     liked_comments_id!: string[];
 
-    @ManyToMany(() => Comment)
-    @JoinColumn()
-    liked_comments!: Comment[];
-
     @Column({
         type: "uuid",
-        nullable: true,
+        array: true,
+        default: [],
     })
     retweets_id!: string[];
 
-    @ManyToMany(() => Tweet)
-    @JoinColumn({ name: "retweets_id" })
-    retweet!: Tweet[];
-
     @Column({
         type: "uuid",
-        nullable: true,
+        default: [],
+        array: true,
     })
-    bookmarks_id!: string[];
+    bookmarks_id: string[];
 
-    @ManyToMany(() => Tweet)
-    @JoinColumn({
-        name: "bookmarks_id",
-    })
+    @ManyToMany(() => Tweet, tweet => tweet.users_saved_id)
+    @JoinTable({ name: "bookmarks_id" })
     bookmarks!: Tweet[];
 
     @CreateDateColumn()
