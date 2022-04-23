@@ -3,4 +3,5 @@ export interface ICreateTweetDTO {
     image?: string;
     isPublic: string;
     content: string;
+    tweet_id?: string;
 }
