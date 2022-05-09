@@ -13,6 +13,7 @@ import { showFollowersController } from "../useCases/ShowFollowers";
 import { showFollowingController } from "../useCases/ShowFollowing";
 import { showUserController } from "../useCases/ShowUser";
 import { unfollowUserController } from "../useCases/UnfollowUser";
+import { verifyJwtController } from "../useCases/VerifyJwt";
 
 const routes = Router();
 
@@ -53,6 +54,9 @@ routes.put("/follower/:id", ensureAuthenticated, (request, response) => {
 });
 routes.delete("/unfollow/:id", ensureAuthenticated, (request, response) => {
     return unfollowUserController.handle(request, response);
+});
+routes.get("/verifyjwt", ensureAuthenticated, (request, response) => {
+    return verifyJwtController.handle(request, response);
 });
 
 export { routes as userRouter };
