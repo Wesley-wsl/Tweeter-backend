@@ -9,6 +9,7 @@
         "start": "node dist/src/server.js",
         "build": "tsc",
         "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+        "migration:run:production": "node ./node_modules/typeorm/cli.js migration:run -d dist/src/api/database/index.js",
         "test": "jest --runInBand --no-cache",
         "test:watch": "jest --no-cache --watchAll",
         "test:coverage": "jest --no-cache --coverage"
