@@ -1,5 +1,6 @@
 import "express-async-errors";
 import "reflect-metadata";
+import { errors } from "celebrate";
 import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
@@ -21,6 +22,7 @@ app.use("/files", express.static(resolve(__dirname, "..", "uploads")));
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/tweet", tweetRouter);
 app.use("/api/v1/comment", commentRouter);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(process.env.PORT || 3333, () => console.log("Server is running."));
