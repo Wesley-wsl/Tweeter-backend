@@ -62,7 +62,7 @@ routes.put("/follower/:id", ensureAuthenticated, (request, response) => {
 routes.delete("/unfollow/:id", ensureAuthenticated, (request, response) => {
     return unfollowUserController.handle(request, response);
 });
-routes.get("/verifyjwt", ensureAuthenticated, (request, response) => {
+routes.get("/me/verify", ensureAuthenticated, (request, response) => {
     return verifyJwtController.handle(request, response);
 });
 
