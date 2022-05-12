@@ -1,3 +1,4 @@
+import { celebrate, Segments } from "celebrate";
 import { Router } from "express";
 import multer from "multer";
 
@@ -14,12 +15,17 @@ import { showFollowingController } from "../useCases/ShowFollowing";
 import { showUserController } from "../useCases/ShowUser";
 import { unfollowUserController } from "../useCases/UnfollowUser";
 import { verifyJwtController } from "../useCases/VerifyJwt";
+import { createUserSchema, editUserSchema } from "../validations/UserSchemas";
 
 const routes = Router();
 
-routes.post("/", (request, response) => {
-    return createUserController.handle(request, response);
-});
+routes.post(
+    "/",
+    celebrate({ [Segments.BODY]: createUserSchema }, { abortEarly: false }),
+    (request, response) => {
+        return createUserController.handle(request, response);
+    },
+);
 routes.post("/login", (request, response) => {
     return authenticateUserController.handle(request, response);
 });
@@ -45,6 +51,7 @@ routes.put(
         { name: "avatar", maxCount: 1 },
         { name: "background", maxCount: 1 },
     ]),
+    celebrate({ [Segments.BODY]: editUserSchema }),
     (request, response) => {
         return editUserController.handle(request, response);
     },

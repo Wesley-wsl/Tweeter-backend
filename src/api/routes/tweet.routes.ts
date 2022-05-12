@@ -1,3 +1,4 @@
+import { celebrate, Segments } from "celebrate";
 import { Router } from "express";
 import multer from "multer";
 
@@ -10,6 +11,7 @@ import { showTweetByUserController } from "../useCases/ShowTweetByUser";
 import { showTweetsController } from "../useCases/ShowTweets";
 import { unlikeTweetController } from "../useCases/UnlikeTweet";
 import { unsaveTweetController } from "../useCases/UnsaveTweet";
+import { createTweetSchema } from "../validations/TweetSchemas";
 
 const routes = Router();
 
@@ -17,6 +19,7 @@ routes.post(
     "/",
     ensureAuthenticated,
     multer(multerConfig).single("image"),
+    celebrate({ [Segments.BODY]: createTweetSchema }, { abortEarly: false }),
     (request, response) => {
         return createTweetController.handle(request, response);
     },

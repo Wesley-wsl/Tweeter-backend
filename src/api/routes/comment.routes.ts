@@ -1,3 +1,4 @@
+import { celebrate, Segments } from "celebrate";
 import { Router } from "express";
 import multer from "multer";
 
@@ -7,6 +8,7 @@ import { createCommentController } from "../useCases/CreateComment";
 import { deleteCommentController } from "../useCases/DeleteComment";
 import { likeCommentController } from "../useCases/LikeComment";
 import { unlikeCommentController } from "../useCases/UnlikeComment";
+import { createCommentSchema } from "../validations/CommentSchemas";
 
 const routes = Router();
 
@@ -14,6 +16,7 @@ routes.post(
     "/:tweetId",
     ensureAuthenticated,
     multer(multerConfig).single("image"),
+    celebrate({ [Segments.BODY]: createCommentSchema }),
     (request, response) => {
         return createCommentController.handle(request, response);
     },
