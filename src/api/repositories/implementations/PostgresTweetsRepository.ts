@@ -1,4 +1,9 @@
 import { Tweet } from "../../entities/Tweet";
+import {
+    IPaginatedFetchResponse,
+    IPaginatedRequest,
+    IPaginatedResponse,
+} from "../../interfaces/Paginated";
 import { ICreateTweetDTO } from "../../useCases/CreateTweet/CreateTweetDTO";
 import { ITweetsRepository } from "../ITweetsRepository";
 
@@ -12,6 +17,21 @@ export class PostgresTweetsRepository implements ITweetsRepository {
                 comments: true,
             },
         });
+    }
+
+    public async findByAuthorPaginated(
+        author_id: string,
+        page: number,
+        relation?: boolean,
+    ): Promise<IPaginatedFetchResponse<Tweet>> {
+        const [data, total] = await Tweet.findAndCount({
+            skip: page * 10,
+            take: 10,
+            where: { author_id },
+            relations: relation ? ["author", "comments"] : [],
+        });
+
+        return { data, total };
     }
 
     public async findById(
