@@ -6,21 +6,6 @@ import { IUser } from "../../interfaces/User";
 import { ShowTweetByUserUseCase } from "./ShowTweetByUserUseCase";
 
 describe("#ShowTweetByUser", () => {
-    it("Shouldn't list tweet by user if tweet from this user is not found", async () => {
-        const inMemoryUsersRepository = new InMemoryUsersRepository();
-        const inMemoryTweetsRepository = new InMemoryTweetsRepository();
-        const sut = new ShowTweetByUserUseCase(
-            inMemoryTweetsRepository,
-            inMemoryUsersRepository,
-        );
-
-        const response = sut.execute("1", "2");
-
-        await expect(response).rejects.toEqual(
-            new Error("Tweets from this user not found"),
-        );
-    });
-
     it("Should only tweets public if is not follow this user", async () => {
         const inMemoryUsersRepository = new InMemoryUsersRepository();
         const inMemoryTweetsRepository = new InMemoryTweetsRepository();
@@ -44,11 +29,15 @@ describe("#ShowTweetByUser", () => {
 
         inMemoryTweetsRepository.items.push(tweet as Tweet);
 
-        const response = await sut.execute(user.id, tweet.author_id);
-        expect(response[0]).toBeFalsy();
+        const response = await sut.execute({
+            userId: user.id,
+            authorId: tweet.author_id,
+            page: 0,
+        });
+        expect(response.data.length).toEqual(0);
     });
 
-    it("Should show tweets if user is not found", async () => {
+    it("Shouldn't show tweets if user is not found", async () => {
         const inMemoryUsersRepository = new InMemoryUsersRepository();
         const inMemoryTweetsRepository = new InMemoryTweetsRepository();
         const sut = new ShowTweetByUserUseCase(
@@ -65,8 +54,12 @@ describe("#ShowTweetByUser", () => {
 
         inMemoryTweetsRepository.items.push(tweet as Tweet);
 
-        const response = await sut.execute("2", tweet.author_id);
-        expect(response[0]).toBeFalsy();
+        const response = await sut.execute({
+            userId: "2",
+            authorId: tweet.author_id,
+            page: 0,
+        });
+        expect(response.data.length).toEqual(0);
     });
 
     it("Should list tweets private by user if is following he", async () => {
@@ -100,7 +93,11 @@ describe("#ShowTweetByUser", () => {
 
         inMemoryTweetsRepository.items.push(tweet as Tweet);
 
-        const response = await sut.execute(user.id, tweet.author_id);
-        expect(response[0].isPublic).toEqual("false");
+        const response = await sut.execute({
+            userId: user.id,
+            authorId: tweet.author_id,
+            page: 0,
+        });
+        expect(response.data[0].isPublic).toEqual("false");
     });
 });

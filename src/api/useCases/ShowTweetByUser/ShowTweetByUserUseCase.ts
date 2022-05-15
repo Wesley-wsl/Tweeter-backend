@@ -1,7 +1,11 @@
+/* eslint-disable no-debugger */
+/* eslint-disable prefer-const */
 /* eslint-disable no-param-reassign */
 import { Tweet } from "../../entities/Tweet";
+import { IPaginatedResponse } from "../../interfaces/Paginated";
 import { ITweetsRepository } from "../../repositories/ITweetsRepository";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
+import { IShowTweetsByUserDTO } from "./ShowTweetsByUserDTO";
 
 export class ShowTweetByUserUseCase {
     constructor(
@@ -9,31 +13,49 @@ export class ShowTweetByUserUseCase {
         private usersRepository: IUsersRepository,
     ) {}
 
-    async execute(userId: string, authorId: string): Promise<Tweet[]> {
-        const tweets = await this.tweetsRepository.findByAuthor(authorId, true);
-        if (!tweets) throw new Error("Tweets from this user not found");
+    async execute({
+        authorId,
+        page,
+        userId,
+    }: IShowTweetsByUserDTO): Promise<IPaginatedResponse<Tweet>> {
+        let { data: tweets, total } =
+            await this.tweetsRepository.findByAuthorPaginated(
+                authorId,
+                page,
+                true,
+            );
+
+        const totalPages = Math.ceil(total / 10);
+        if (page > totalPages - 1) throw new Error("Page don't exists.");
+
         const user = await this.usersRepository.findById(userId, true);
         const isFollowing = user?.following.filter(
             following => following.id === authorId,
         );
-        const tweetWithoutPassword: Tweet[] = [];
+
+        tweets = tweets.filter(tweet => {
+            delete tweet.author.password;
+            return tweet;
+        });
 
         if (!isFollowing || isFollowing.length === 0) {
-            const tweetsFiltered = tweets.filter(tweet => {
+            tweets = tweets.filter(tweet => {
                 if (tweet.author_id === userId) return tweet;
                 return tweet.isPublic === "true";
             });
-            tweetsFiltered.forEach(tweet => {
-                delete tweet.author.password;
-                tweetWithoutPassword.push(tweet);
-            });
-            return tweetsFiltered;
         }
 
-        tweets.forEach(tweet => {
-            delete tweet.author.password;
-            tweetWithoutPassword.push(tweet);
-        });
-        return tweetWithoutPassword;
+        const response: IPaginatedResponse<Tweet> = {
+            data: tweets,
+            totalElements: total,
+            page,
+            elements: tweets.length,
+            elementsPerPage: 10,
+            totalPages,
+            firstPage: page === 0,
+            lastPage: page === totalPages - 1,
+        };
+
+        return response;
     }
 }
