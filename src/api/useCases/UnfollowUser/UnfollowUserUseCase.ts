@@ -19,13 +19,28 @@ export class UnfollowUserUseCase {
         );
         if (!userToUnfollow.followers) throw new Error("Followers not found");
 
+        const alreadyFollowing = userToUnfollow.followers_id.some(
+            Id => Id === userId,
+        );
+        if (!alreadyFollowing)
+            throw new Error("You already don't follow this user.");
+
         const followersFiltered = userToUnfollow.followers.filter(
             followers => followers.id !== user.id,
         );
 
+        const followingIdFiltered = userToUnfollow.following_id.filter(
+            following => following !== user.id,
+        );
+        const followersIdFiltered = userToUnfollow.followers_id.filter(
+            follower => follower !== user.id,
+        );
+
         user.following = followingFiltered;
+        user.following_id = followingIdFiltered;
         user.followingCount -= 1;
         userToUnfollow.followers = followersFiltered;
+        userToUnfollow.followers_id = followersIdFiltered;
         userToUnfollow.followersCount -= 1;
         await this.usersRepository.save(user);
         await this.usersRepository.save(userToUnfollow);

@@ -18,9 +18,16 @@ export class FollowerUserUseCase {
 
         if (!userToFollow.followers) throw new Error("Follower not found");
 
+        const alreadyFollowing = userToFollow.followers_id.some(
+            followersId => followersId === userId,
+        );
+        if (alreadyFollowing) throw new Error("You already follow this user.");
+
         user.following.push(userToFollow);
+        user.following_id.push(userToFollow.id);
         user.followingCount += 1;
         userToFollow.followers.push(user);
+        userToFollow.followers_id.push(user.id);
         userToFollow.followersCount += 1;
         await this.usersRepository.save(user);
         await this.usersRepository.save(userToFollow);
