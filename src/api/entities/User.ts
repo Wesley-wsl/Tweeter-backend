@@ -50,6 +50,20 @@ export class User extends BaseEntity {
     })
     followersCount!: number;
 
+    @Column({
+        type: "uuid",
+        array: true,
+        default: [],
+    })
+    following_id!: string[];
+
+    @Column({
+        type: "uuid",
+        array: true,
+        default: [],
+    })
+    followers_id!: string[];
+
     @ManyToMany(() => User, user => user.followers)
     following!: User[];
 
