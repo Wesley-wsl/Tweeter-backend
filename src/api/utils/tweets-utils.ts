@@ -18,3 +18,21 @@ export function sortByLikes(items: Tweet[]) {
     } while (swap);
     return items;
 }
+
+export function sortByLatest(items: Tweet[]) {
+    let swap;
+    const last = items.length - 1;
+
+    do {
+        swap = false;
+        for (let i = 0; i < last; ) {
+            if (items[i].created_at < items[i + 1].created_at) {
+                [items[i], items[i + 1]] = [items[i + 1], items[i]];
+                swap = true;
+            }
+
+            i += 1;
+        }
+    } while (swap);
+    return items;
+}
