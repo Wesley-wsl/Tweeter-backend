@@ -18,8 +18,9 @@ export class ShowAllUsersUseCase {
         });
 
         const total = user.length;
-        const totalPages = Math.ceil(total / 10);
+        let totalPages = Math.ceil(total / 10);
         const paginatedUser = user.slice(page * 10, page * 10 + 10);
+        if (totalPages - 1 < 1) totalPages = 1;
         if (page > totalPages - 1) throw new Error("Page don't exists.");
 
         const response: IPaginatedResponse<User> = {
