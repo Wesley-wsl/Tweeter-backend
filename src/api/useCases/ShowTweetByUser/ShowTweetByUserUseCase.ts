@@ -1,10 +1,9 @@
-/* eslint-disable no-debugger */
-/* eslint-disable prefer-const */
 /* eslint-disable no-param-reassign */
 import { Tweet } from "../../entities/Tweet";
 import { IPaginatedResponse } from "../../interfaces/Paginated";
 import { ITweetsRepository } from "../../repositories/ITweetsRepository";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
+import { sortByLikes } from "../../utils/tweets-utils";
 import { IShowTweetsByUserDTO } from "./ShowTweetsByUserDTO";
 
 export class ShowTweetByUserUseCase {
@@ -13,19 +12,17 @@ export class ShowTweetByUserUseCase {
         private usersRepository: IUsersRepository,
     ) {}
 
-    async execute({
-        authorId,
-        page,
-        userId,
-    }: IShowTweetsByUserDTO): Promise<IPaginatedResponse<Tweet>> {
-        let { data: tweets, total } =
-            await this.tweetsRepository.findByAuthorPaginated(
-                authorId,
-                page,
-                true,
-            );
+    async execute({ authorId, page, userId, filter }: IShowTweetsByUserDTO) {
+        let tweets = await this.tweetsRepository.findByAuthor(authorId, true);
 
-        const totalPages = Math.ceil(total / 10);
+        if (!tweets) throw new Error("Tweets not fond");
+        if (filter === "media")
+            tweets = tweets.filter(tweet => tweet.image !== null);
+
+        const total = tweets.length;
+        let totalPages = Math.ceil(total / 10);
+
+        if (totalPages - 1 < 1) totalPages = 1;
         if (page > totalPages - 1) throw new Error("Page don't exists.");
 
         const user = await this.usersRepository.findById(userId, true);
@@ -45,11 +42,14 @@ export class ShowTweetByUserUseCase {
             });
         }
 
+        if (filter === "likes") sortByLikes(tweets);
+
+        const tweetsPaginated = tweets.slice(page * 10, page * 10 + 10);
         const response: IPaginatedResponse<Tweet> = {
-            data: tweets,
+            data: tweetsPaginated,
             totalElements: total,
             page,
-            elements: tweets.length,
+            elements: tweetsPaginated.length,
             elementsPerPage: 10,
             totalPages,
             firstPage: page === 0,
