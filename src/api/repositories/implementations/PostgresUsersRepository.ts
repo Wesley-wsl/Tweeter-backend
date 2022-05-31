@@ -1,9 +1,15 @@
+import { Like } from "typeorm";
+
 import { User } from "../../entities/User";
 import { IUsersRepository } from "../IUsersRepository";
 
 export class PostgresUserRepository implements IUsersRepository {
-    public async findAllUsers(): Promise<User[]> {
-        return User.find();
+    public async findAllUsers(name: string): Promise<User[]> {
+        return User.find({
+            where: {
+                name: Like(`%${name}%`),
+            },
+        });
     }
 
     public async findByEmail(
@@ -24,14 +30,19 @@ export class PostgresUserRepository implements IUsersRepository {
         return User.findOne({
             where: { id },
             relations: relation
-                ? ["following", "followers", "tweets", "bookmarks"]
+                ? [
+                      "following",
+                      "followers",
+                      "tweets",
+                      "bookmarks",
+                      "bookmarks.author",
+                  ]
                 : [],
         });
     }
 
     public async createUser({ name, email, password }: User): Promise<User> {
         const user = User.create({ name, email, password });
-        await User.save(user);
         return user;
     }
 

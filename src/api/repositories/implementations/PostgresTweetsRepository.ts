@@ -1,20 +1,19 @@
+import { Like } from "typeorm";
+
 import { Tweet } from "../../entities/Tweet";
-import {
-    IPaginatedFetchResponse,
-    IPaginatedRequest,
-    IPaginatedResponse,
-} from "../../interfaces/Paginated";
+import { IPaginatedFetchResponse } from "../../interfaces/Paginated";
 import { ICreateTweetDTO } from "../../useCases/CreateTweet/CreateTweetDTO";
 import { ITweetsRepository } from "../ITweetsRepository";
 
 export class PostgresTweetsRepository implements ITweetsRepository {
-    public async findAllTweets(): Promise<Tweet[]> {
+    public async findAllTweets(search: string): Promise<Tweet[]> {
         return Tweet.find({
             relations: {
-                author: {
-                    followers: true,
-                },
+                author: true,
                 comments: true,
+            },
+            where: {
+                content: Like(`%${search}%`),
             },
         });
     }

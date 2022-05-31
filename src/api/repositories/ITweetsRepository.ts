@@ -3,7 +3,7 @@ import { IPaginatedFetchResponse } from "../interfaces/Paginated";
 import { ICreateTweetDTO } from "../useCases/CreateTweet/CreateTweetDTO";
 
 export interface ITweetsRepository {
-    findAllTweets(): Promise<Tweet[]>;
+    findAllTweets(search: string): Promise<Tweet[]>;
     findById(id: string, relation?: boolean): Promise<Tweet | null>;
     findByAuthorPaginated(
         author_id: string,
