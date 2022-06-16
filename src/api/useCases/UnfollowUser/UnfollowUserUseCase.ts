@@ -29,8 +29,8 @@ export class UnfollowUserUseCase {
             followers => followers.id !== user.id,
         );
 
-        const followingIdFiltered = userToUnfollow.following_id.filter(
-            following => following !== user.id,
+        const followingIdFiltered = user.following_id.filter(
+            following => following !== userToUnfollow.id,
         );
         const followersIdFiltered = userToUnfollow.followers_id.filter(
             follower => follower !== user.id,
