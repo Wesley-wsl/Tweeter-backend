@@ -1,7 +1,6 @@
 import { Tweet } from "../../entities/Tweet";
 import { IPaginatedResponse } from "../../interfaces/Paginated";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { sortByLikes } from "../../utils/tweets-utils";
 import { IShowBookmarksDTO } from "./ShowBookmarksDTO";
 
 export class ShowBookmarksUseCase {
@@ -24,7 +23,13 @@ export class ShowBookmarksUseCase {
         if (totalPages - 1 < 1) totalPages = 1;
         if (page > totalPages - 1) throw new Error("Page don't exists.");
 
-        if (filter === "likes") sortByLikes(userBookmarks);
+        if (filter === "likes") {
+            userBookmarks = userBookmarks.sort((a, b) => {
+                if (a.likes > b.likes) return -1;
+                if (a.likes < b.likes) return 1;
+                return 0;
+            });
+        }
 
         const bookmarksPaginated = userBookmarks.slice(
             page * 10,

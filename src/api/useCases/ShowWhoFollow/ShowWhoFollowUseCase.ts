@@ -18,28 +18,13 @@ export class ShowWhoFollowUseCase {
         const whoFollow: string[] = [];
 
         if (queue.length === 0) {
-            const allUsers = await this.usersRepository.findAllUsers("");
+            let allUsers = await this.usersRepository.findAllUsers("");
 
-            let swap;
-            const last = allUsers.length - 1;
-
-            do {
-                swap = false;
-                for (let i = 0; i < last; ) {
-                    if (
-                        allUsers[i].followersCount <
-                        allUsers[i + 1].followersCount
-                    ) {
-                        [allUsers[i], allUsers[i + 1]] = [
-                            allUsers[i + 1],
-                            allUsers[i],
-                        ];
-                        swap = true;
-                    }
-
-                    i += 1;
-                }
-            } while (swap);
+            allUsers = allUsers.sort((a, b) => {
+                if (a.followersCount > b.followersCount) return -1;
+                if (a.followersCount < b.followersCount) return 1;
+                return 0;
+            });
 
             return allUsers.slice(0, 5);
         }

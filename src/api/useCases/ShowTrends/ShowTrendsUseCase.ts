@@ -45,27 +45,13 @@ export class ShowTrendsUseCase {
             }
         });
 
-        const trendsSort = trendsReduced.slice(0, 5);
-        let swap;
-        const last = trendsSort.length - 1;
+        let trendsSort = trendsReduced.slice(0, 5);
 
-        do {
-            swap = false;
-            for (let i = 0; i < last; ) {
-                if (
-                    trendsSort[i].tweetsQuantity <
-                    trendsSort[i + 1].tweetsQuantity
-                ) {
-                    [trendsSort[i], trendsSort[i + 1]] = [
-                        trendsSort[i + 1],
-                        trendsSort[i],
-                    ];
-                    swap = true;
-                }
-
-                i += 1;
-            }
-        } while (swap);
+        trendsSort = trendsSort.sort((a, b) => {
+            if (a.tweetsQuantity > b.tweetsQuantity) return -1;
+            if (a.tweetsQuantity < b.tweetsQuantity) return 1;
+            return 0;
+        });
 
         return trendsSort;
     }

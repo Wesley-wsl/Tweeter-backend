@@ -2,7 +2,6 @@
 import { Tweet } from "../../entities/Tweet";
 import { IPaginatedResponse } from "../../interfaces/Paginated";
 import { ITweetsRepository } from "../../repositories/ITweetsRepository";
-import { sortByLatest, sortByLikes } from "../../utils/tweets-utils";
 import { IShowTweetsDTO } from "./ShowTweetsDTO";
 
 export class ShowTweetsUseCase {
@@ -34,8 +33,20 @@ export class ShowTweetsUseCase {
         if (totalPages - 1 < 1) totalPages = 1;
         if (page > totalPages - 1) throw new Error("Page don't exists.");
 
-        if (filter === "top") sortByLikes(tweets);
-        if (filter === "latest") sortByLatest(tweets);
+        if (filter === "top") {
+            tweets = tweets.sort((a, b) => {
+                if (a.likes > b.likes) return -1;
+                if (a.likes < b.likes) return 1;
+                return 0;
+            });
+        }
+        if (filter === "latest") {
+            tweets = tweets.sort((a, b) => {
+                if (a.created_at > b.created_at) return -1;
+                if (a.created_at < b.created_at) return 1;
+                return 0;
+            });
+        }
 
         const tweetsPaginated = tweets.slice(page * 10, page * 10 + 10);
         const response: IPaginatedResponse<Tweet> = {

@@ -3,7 +3,6 @@ import { Tweet } from "../../entities/Tweet";
 import { IPaginatedResponse } from "../../interfaces/Paginated";
 import { ITweetsRepository } from "../../repositories/ITweetsRepository";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { sortByLikes } from "../../utils/tweets-utils";
 import { IShowTweetsByUserDTO } from "./ShowTweetsByUserDTO";
 
 export class ShowTweetByUserUseCase {
@@ -42,7 +41,13 @@ export class ShowTweetByUserUseCase {
             });
         }
 
-        if (filter === "likes") sortByLikes(tweets);
+        if (filter === "likes") {
+            tweets = tweets.sort((a, b) => {
+                if (a.likes > b.likes) return -1;
+                if (a.likes < b.likes) return 1;
+                return 0;
+            });
+        }
 
         const tweetsPaginated = tweets.slice(page * 10, page * 10 + 10);
         const response: IPaginatedResponse<Tweet> = {
