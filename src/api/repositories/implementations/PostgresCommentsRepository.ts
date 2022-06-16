@@ -25,7 +25,6 @@ export class PostgresCommentsRepository implements ICommentRepository {
             tweet_id,
             image,
         });
-        await Comment.save(commentCreated);
         return commentCreated;
     }
 

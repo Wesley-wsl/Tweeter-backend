@@ -8,10 +8,7 @@ import { ITweetsRepository } from "../ITweetsRepository";
 export class PostgresTweetsRepository implements ITweetsRepository {
     public async findAllTweets(search: string): Promise<Tweet[]> {
         return Tweet.find({
-            relations: {
-                author: true,
-                comments: true,
-            },
+            relations: ["author", "comments", "comments.author"],
             where: {
                 content: Like(`%${search}%`),
             },
@@ -49,7 +46,9 @@ export class PostgresTweetsRepository implements ITweetsRepository {
     ): Promise<Tweet[] | null> {
         return Tweet.find({
             where: { author_id },
-            relations: relation ? ["author", "comments"] : [],
+            relations: relation
+                ? ["author", "comments", "comments.author"]
+                : [],
         });
     }
 
@@ -67,6 +66,10 @@ export class PostgresTweetsRepository implements ITweetsRepository {
         });
         await Tweet.save(tweet);
         return tweet;
+    }
+
+    public async deleteTweetById(tweetId: string): Promise<void> {
+        await Tweet.delete(tweetId);
     }
 
     public async save(tweet: Tweet): Promise<Tweet> {

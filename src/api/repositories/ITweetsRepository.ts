@@ -15,5 +15,6 @@ export interface ITweetsRepository {
         relation?: boolean,
     ): Promise<Tweet[] | null>;
     createTweet(tweet: ICreateTweetDTO): Promise<Tweet>;
+    deleteTweetById(tweetId: string): Promise<void>;
     save(tweet: Tweet): Promise<Tweet>;
 }
