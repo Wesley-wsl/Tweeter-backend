@@ -26,9 +26,8 @@ export class CreateCommentUseCase {
 
         tweet.comments_id.push(createdComment.id);
         tweet.comments.push(createdComment);
-        this.postgresTweetsRepository.save(tweet);
-        this.postgresCommentsRepository.save(createdComment);
-
+        await this.postgresTweetsRepository.save(tweet);
+        await this.postgresCommentsRepository.save(createdComment);
         return createdComment;
     }
 }
