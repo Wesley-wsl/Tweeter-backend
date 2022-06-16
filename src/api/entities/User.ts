@@ -72,7 +72,7 @@ export class User extends BaseEntity {
     followers?: User[];
 
     @Column({
-        default: "",
+        default: "Nothing about me. :/",
     })
     about_me!: string;
 
