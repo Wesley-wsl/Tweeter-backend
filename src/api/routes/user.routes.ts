@@ -13,6 +13,7 @@ import { showBookmarksController } from "../useCases/ShowBookmarks";
 import { showFollowersController } from "../useCases/ShowFollowers";
 import { showFollowingController } from "../useCases/ShowFollowing";
 import { showUserController } from "../useCases/ShowUser";
+import { showWhoFollowController } from "../useCases/ShowWhoFollow";
 import { unfollowUserController } from "../useCases/UnfollowUser";
 import { verifyJwtController } from "../useCases/VerifyJwt";
 import { createUserSchema, editUserSchema } from "../validations/UserSchemas";
@@ -34,6 +35,9 @@ routes.get("/", (request, response) => {
 });
 routes.get("/:id", (request, response) => {
     return showUserController.handle(request, response);
+});
+routes.get("/me/whofollow", ensureAuthenticated, (request, response) => {
+    return showWhoFollowController.handle(request, response);
 });
 routes.get("/:id/following", (request, response) => {
     return showFollowingController.handle(request, response);
