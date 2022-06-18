@@ -26,6 +26,7 @@ export class ShowWhoFollowUseCase {
                 return 0;
             });
 
+            allUsers = allUsers.filter(user => user.id !== userId);
             return allUsers.slice(0, 5);
         }
 
