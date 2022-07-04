@@ -1,10 +1,15 @@
+/* eslint-disable no-await-in-loop */
 import { Tweet } from "../../entities/Tweet";
 import { IPaginatedResponse } from "../../interfaces/Paginated";
+import { ITweetsRepository } from "../../repositories/ITweetsRepository";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 import { IShowBookmarksDTO } from "./ShowBookmarksDTO";
 
 export class ShowBookmarksUseCase {
-    constructor(private postgresUsersRepository: IUsersRepository) {}
+    constructor(
+        private postgresUsersRepository: IUsersRepository,
+        private postgresTweetsRepository: ITweetsRepository,
+    ) {}
 
     async execute({ authorId, filter, page }: IShowBookmarksDTO) {
         const user = await this.postgresUsersRepository.findById(
@@ -12,7 +17,20 @@ export class ShowBookmarksUseCase {
             true,
         );
         if (!user) throw new Error("User not found");
-        let userBookmarks = user.bookmarks;
+        const userBookmarksId = user.bookmarks_id;
+        let userBookmarks: Tweet[] = [];
+
+        for (let i = 0; i < userBookmarksId.length; i++) {
+            const tweetBookmarked =
+                await this.postgresTweetsRepository.findById(
+                    userBookmarksId[i],
+                    true,
+                );
+
+            if (tweetBookmarked) {
+                userBookmarks.push(tweetBookmarked);
+            }
+        }
 
         if (filter === "media")
             userBookmarks = userBookmarks.filter(tweet => tweet.image !== null);
