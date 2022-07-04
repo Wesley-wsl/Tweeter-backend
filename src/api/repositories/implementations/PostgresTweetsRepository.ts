@@ -36,7 +36,9 @@ export class PostgresTweetsRepository implements ITweetsRepository {
     ): Promise<Tweet | null> {
         return Tweet.findOne({
             where: { id },
-            relations: relation ? ["author", "comments", "retweet"] : [],
+            relations: relation
+                ? ["author", "comments", "comments.author", "retweet"]
+                : [],
         });
     }
 
