@@ -24,6 +24,7 @@ export class ShowTweetsUseCase {
             const isFollowing = tweet.author.followers_id?.some(
                 follower => follower === userId,
             );
+            if (tweet.isPublic === "true") return tweet;
             return isFollowing || (tweet.author_id === userId && tweet);
         });
 
