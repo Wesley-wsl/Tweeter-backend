@@ -1,0 +1,2179 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tweeter API",
+        "description": "Tweeter API is a API for a social network.",
+        "contact": {
+            "email": "wesleywestelley@gmail.com",
+            "name": "Wesley Westelley"
+        },
+        "version": "1.0.0"
+    },
+    "externalDocs": {
+        "description": "Developer Github",
+        "url": "https://github.com/Wesley-wsl"
+    },
+    "tags": [
+        {
+            "name": "User",
+            "description": "Operations about user."
+        },
+        {
+            "name": "Tweet",
+            "description": "Operations about tweet."
+        },
+        {
+            "name": "Comment",
+            "description": "Operations about comment."
+        }
+    ],
+    "paths": {
+        "/api/v1/user": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Create User",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "$ref": "#/definitions/User"
+                                },
+                                "example": {
+                                    "name": "Jorkis",
+                                    "email": "jorkis@gmail.com",
+                                    "password": "123456"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "user": {
+                                            "id": "1",
+                                            "name": "Jorkis",
+                                            "email": "jorkis@gmail.com",
+                                            "password": "123456",
+                                            "avatar": null,
+                                            "background": null,
+                                            "followingCount": 0,
+                                            "followersCount": 0,
+                                            "following_id": [],
+                                            "followers_id": [],
+                                            "following": [],
+                                            "followers": [],
+                                            "about_me": "Nothing about me. :/",
+                                            "tweets": [],
+                                            "liked_tweets_id": [],
+                                            "liked_tweets": [],
+                                            "liked_comments_id": [],
+                                            "bookmarks_id": [],
+                                            "bookmarks": [],
+                                            "created_at": "2022-03-20T23:53:38.172Z",
+                                            "updated_at": "2022-03-20T23:53:38.172Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - invalid email/password or User already registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": ["User"],
+                "summary": "Show all users.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "Filter by name.",
+                        "type": "string",
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "Get page.",
+                        "type": "number",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": []
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "3fa4924a-f606-4aad-8bba-574d12a0cb59",
+                                                "name": "Jorkis",
+                                                "email": "jorkis@gmail.com",
+                                                "created_at": "2022-03-12T00:39:51.930Z",
+                                                "updated_at": "2022-03-14T00:29:14.848Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": false,
+                                        "error": "Page not found."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/login": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Login user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "jorkis22@gmail.com",
+                                    "password": "12345"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "token": "string",
+                                            "user": {
+                                                "id": "string",
+                                                "name": "string",
+                                                "email": "string",
+                                                "password": "string",
+                                                "avatar": null,
+                                                "background": null,
+                                                "followingCount": 0,
+                                                "followersCount": 0,
+                                                "following_id": [],
+                                                "followers_id": [],
+                                                "following": [],
+                                                "followers": [],
+                                                "about_me": "Nothing about me. :/",
+                                                "tweets": [],
+                                                "liked_tweets_id": [],
+                                                "liked_tweets": [],
+                                                "liked_comments_id": [],
+                                                "bookmarks_id": [],
+                                                "bookmarks": [],
+                                                "created_at": "2022-03-20T23:53:38.172Z",
+                                                "updated_at": "2022-03-20T23:53:38.172Z"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": false,
+                                        "error": "Email/password incorrect"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Show user by id.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Search user by id.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {
+                                            "id": "123",
+                                            "name": "Jorkis",
+                                            "email": "jorkis22@gmail.com",
+                                            "password": "1234567",
+                                            "avatar": null,
+                                            "background": null,
+                                            "followingCount": 0,
+                                            "followersCount": 0,
+                                            "following_id": [],
+                                            "followers_id": [],
+                                            "following": [],
+                                            "followers": [],
+                                            "about_me": "Nothing about me. :/",
+                                            "tweets": [],
+                                            "liked_tweets_id": [],
+                                            "liked_tweets": [],
+                                            "liked_comments_id": [],
+                                            "bookmarks_id": [],
+                                            "bookmarks": [],
+                                            "created_at": "2022-03-20T23:53:38.172Z",
+                                            "updated_at": "2022-03-20T23:53:38.172Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": false,
+                                        "error": "User not found"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["User"],
+                "summary": "Edit user by id.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Edit user by id.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "about_me": {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "avatar": {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "background": {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "required": false
+                                    }
+                                },
+                                "example": {
+                                    "email": "jorkis22@gmail.com",
+                                    "name": "Jorkis",
+                                    "about_me": "About me."
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "user": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "123",
+                                                "name": "Jorkis",
+                                                "email": "jorkis22@gmail.com",
+                                                "password": "1234567",
+                                                "avatar": null,
+                                                "background": null,
+                                                "followingCount": 0,
+                                                "followersCount": 0,
+                                                "following_id": [],
+                                                "followers_id": [],
+                                                "following": [],
+                                                "followers": [],
+                                                "about_me": "Nothing about me. :/",
+                                                "tweets": [],
+                                                "liked_tweets_id": [],
+                                                "liked_tweets": [],
+                                                "liked_comments_id": [],
+                                                "bookmarks_id": [],
+                                                "bookmarks": [],
+                                                "created_at": "2022-03-20T23:53:38.172Z",
+                                                "updated_at": "2022-03-20T23:53:38.172Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": false,
+                                        "error": "Email already used"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/me/whoFollow": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Recommend users to follow.",
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": [{}]
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "123",
+                                                "name": "Jorkis",
+                                                "email": "jorkis22@gmail.com",
+                                                "avatar": null,
+                                                "background": null,
+                                                "followingCount": 0,
+                                                "followersCount": 0,
+                                                "following_id": [],
+                                                "followers_id": [],
+                                                "following": [],
+                                                "followers": [],
+                                                "about_me": "Nothing about me. :/",
+                                                "tweets": [],
+                                                "liked_tweets_id": [],
+                                                "liked_tweets": [],
+                                                "liked_comments_id": [],
+                                                "bookmarks_id": [],
+                                                "bookmarks": [],
+                                                "created_at": "2022-03-20T23:53:38.172Z",
+                                                "updated_at": "2022-03-20T23:53:38.172Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "User not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}/following": {
+            "get": {
+                "tags": ["User"],
+                "summary": "List followings by user.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "User ID for get following list by user.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": [{}]
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "123",
+                                                "name": "Jorkis",
+                                                "email": "jorkis22@gmail.com",
+                                                "avatar": null,
+                                                "background": null,
+                                                "followingCount": 0,
+                                                "followersCount": 0,
+                                                "following_id": [],
+                                                "followers_id": [],
+                                                "following": [],
+                                                "followers": [],
+                                                "about_me": "Nothing about me. :/",
+                                                "tweets": [],
+                                                "liked_tweets_id": [],
+                                                "liked_tweets": [],
+                                                "liked_comments_id": [],
+                                                "bookmarks_id": [],
+                                                "bookmarks": [],
+                                                "created_at": "2022-03-20T23:53:38.172Z",
+                                                "updated_at": "2022-03-20T23:53:38.172Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "User not found."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}/followers": {
+            "get": {
+                "tags": ["User"],
+                "summary": "List followers by user.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "User ID for get followers list by user.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": [{}]
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "123",
+                                                "name": "Jorkis",
+                                                "email": "jorkis22@gmail.com",
+                                                "avatar": null,
+                                                "background": null,
+                                                "followingCount": 0,
+                                                "followersCount": 0,
+                                                "following_id": [],
+                                                "followers_id": [],
+                                                "following": [],
+                                                "followers": [],
+                                                "about_me": "Nothing about me. :/",
+                                                "tweets": [],
+                                                "liked_tweets_id": [],
+                                                "liked_tweets": [],
+                                                "liked_comments_id": [],
+                                                "bookmarks_id": [],
+                                                "bookmarks": [],
+                                                "created_at": "2022-03-20T23:53:38.172Z",
+                                                "updated_at": "2022-03-20T23:53:38.172Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "User not found."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}/bookmarks": {
+            "get": {
+                "tags": ["User"],
+                "summary": "List bookmarks by user.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "User ID for get bookmark list by user.",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "filter",
+                        "description": "filter tweets.",
+                        "type": "string",
+                        "enum": ["media", "likes"],
+                        "default": "",
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "Page of the tweet.",
+                        "type": "string",
+                        "default": 0,
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        },
+                                        "totalElements": {
+                                            "type": "integer"
+                                        },
+                                        "page": {
+                                            "type": "integer"
+                                        },
+                                        "elements": {
+                                            "type": "integer"
+                                        },
+                                        "elementsPerPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        },
+                                        "firstPage": {
+                                            "type": "boolean"
+                                        },
+                                        "lastPage": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [],
+                                        "totalElements": 0,
+                                        "page": 0,
+                                        "elements": 0,
+                                        "elementsPerPage": 0,
+                                        "totalPages": 1,
+                                        "firstPage": true,
+                                        "lastPage": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "User not found."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/follower/{id}": {
+            "put": {
+                "tags": ["User"],
+                "summary": "Follow a user.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "User ID to follow.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": [{}]
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [
+                                            {
+                                                "id": "12",
+                                                "author_id": "1",
+                                                "author": {},
+                                                "likes": 0,
+                                                "liked_users_id": [],
+                                                "image": null,
+                                                "content": "content",
+                                                "comments_id": [],
+                                                "comments": [],
+                                                "isPublic": "true",
+                                                "users_saved_id": [],
+                                                "created_at": "2022-03-12T00:39:51.930Z",
+                                                "updated_at": "2022-03-13T03:02:16.897Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/unfollow/{id}": {
+            "delete": {
+                "tags": ["User"],
+                "summary": "Unfollow a user.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "User ID to unfollow.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/me/verify": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Verify if JWT token still is valid.",
+                "security": [{ "bearerAuth": [] }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "id": "123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/comment/{tweetId}": {
+            "post": {
+                "tags": ["Comment"],
+                "summary": ".",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID to comment.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "comment": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "required": false
+                                    }
+                                },
+                                "example": {
+                                    "comment": "Comment."
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {
+                                            "id": "3",
+                                            "author_id": "2",
+                                            "author": {},
+                                            "tweet_id": "1",
+                                            "tweet": {},
+                                            "comment": "Comment.",
+                                            "likes": 0,
+                                            "liked_users_id": [],
+                                            "image": null,
+                                            "created_at": "2022-03-12T00:39:51.930Z",
+                                            "updated_at": "2022-03-13T03:02:16.897Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/comment/{commentId}/like": {
+            "put": {
+                "tags": ["Comment"],
+                "summary": "Like a comment.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commentId",
+                        "description": "Comment ID to like the comment.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Comment not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Comment"],
+                "summary": "Unlike a comment.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commentId",
+                        "description": "Comment ID to like the comment.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Comment not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/comment/{commentId}": {
+            "delete": {
+                "tags": ["Comment"],
+                "summary": "Delete a comment.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commentId",
+                        "description": "Comment ID to like the comment.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Comment not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet": {
+            "post": {
+                "tags": ["Tweet"],
+                "summary": "Create a tweet.",
+                "security": [{ "bearerAuth": [] }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "isPublic": {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "author_id": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "required": false
+                                    }
+                                },
+                                "example": {
+                                    "content": "Content.",
+                                    "isPublic": "true",
+                                    "author_id": "123"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {
+                                            "id": "2",
+                                            "author_id": "1",
+                                            "author": {},
+                                            "likes": 0,
+                                            "liked_users_id": [],
+                                            "image": null,
+                                            "content": "Content",
+                                            "comments_id": [],
+                                            "comments": [],
+                                            "isPublic": "true",
+                                            "users_saved_id": [],
+                                            "created_at": "2022-03-12T00:39:51.930Z",
+                                            "updated_at": "2022-03-13T03:02:16.897Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Author not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Tweet"],
+                "summary": "Get tweets to you feed.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "filter",
+                        "description": "filter tweets.",
+                        "type": "string",
+                        "enum": ["media", "top", "latest"],
+                        "default": "",
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "Page of the tweet.",
+                        "type": "string",
+                        "default": 0,
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "Search tweets by content.",
+                        "type": "string",
+                        "default": "",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        },
+                                        "totalElements": {
+                                            "type": "integer"
+                                        },
+                                        "page": {
+                                            "type": "integer"
+                                        },
+                                        "elements": {
+                                            "type": "integer"
+                                        },
+                                        "elementsPerPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        },
+                                        "firstPage": {
+                                            "type": "boolean"
+                                        },
+                                        "lastPage": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [],
+                                        "totalElements": 0,
+                                        "page": 0,
+                                        "elements": 0,
+                                        "elementsPerPage": 0,
+                                        "totalPages": 1,
+                                        "firstPage": true,
+                                        "lastPage": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Page don't exists."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet/{authorId}": {
+            "get": {
+                "tags": ["Tweet"],
+                "summary": "Get tweets by author.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "authorId",
+                        "description": "Author id.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        },
+                                        "totalElements": {
+                                            "type": "integer"
+                                        },
+                                        "page": {
+                                            "type": "integer"
+                                        },
+                                        "elements": {
+                                            "type": "integer"
+                                        },
+                                        "elementsPerPage": {
+                                            "type": "integer"
+                                        },
+                                        "totalPages": {
+                                            "type": "integer"
+                                        },
+                                        "firstPage": {
+                                            "type": "boolean"
+                                        },
+                                        "lastPage": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": [],
+                                        "totalElements": 0,
+                                        "page": 0,
+                                        "elements": 0,
+                                        "elementsPerPage": 0,
+                                        "totalPages": 1,
+                                        "firstPage": true,
+                                        "lastPage": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Page don't exists."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet/me/trends": {
+            "get": {
+                "tags": ["Tweet"],
+                "summary": "Get trends.",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": []
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": []
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet/{tweetId}/save": {
+            "put": {
+                "tags": ["Tweet"],
+                "summary": "Save a tweet in bookmarks.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet already saved"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Tweet"],
+                "summary": "Unsave a tweet.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet not saved"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet/{tweetId}/like": {
+            "put": {
+                "tags": ["Tweet"],
+                "summary": "Like a tweet.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet already liked"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Tweet"],
+                "summary": "Unlike a tweet.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": {}
+                                        }
+                                    },
+                                    "example": {
+                                        "success": true,
+                                        "data": {}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet don't has liked"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        },
+        "/api/v1/tweet/{tweetId}": {
+            "delete": {
+                "tags": ["Tweet"],
+                "summary": "Delete a tweet.",
+                "security": [{ "bearerAuth": [] }],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tweetId",
+                        "description": "Tweet ID.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": false,
+                                    "error": "Tweet is not found."
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - User must be authenticated"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                    "id": {
+                        "type": "stirng"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "number"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "default": null
+                    },
+                    "background": {
+                        "type": "string",
+                        "default": null
+                    },
+                    "followingCount": {
+                        "type": "number"
+                    },
+                    "followersCount": {
+                        "type": "number"
+                    },
+                    "following_id": {
+                        "type": []
+                    },
+                    "followers_id": {
+                        "type": []
+                    },
+                    "following": {
+                        "type": []
+                    },
+                    "followers": {
+                        "type": []
+                    },
+                    "about_me": {
+                        "type": "string",
+                        "default": "Nothing about me. :/"
+                    },
+                    "tweets": {
+                        "type": []
+                    },
+                    "liked_tweets_id": {
+                        "type": []
+                    },
+                    "liked_tweets": {
+                        "type": []
+                    },
+                    "liked_comments_id": {
+                        "type": []
+                    },
+                    "bookmarks_id": {
+                        "type": []
+                    },
+                    "bookmarks": {
+                        "type": []
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "User"
+                }
+            },
+            "Tweet": {
+                "type": "object",
+                "required": ["author_id", "isPublic", "content"],
+                "properties": {
+                    "id": {
+                        "type": "stirng"
+                    },
+                    "author_id": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "type": "object"
+                    },
+                    "likes": {
+                        "type": "number"
+                    },
+                    "liked_users_id": {
+                        "type": []
+                    },
+                    "image": {
+                        "type": "string",
+                        "default": null
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "comments_id": {
+                        "type": []
+                    },
+                    "comments": {
+                        "type": []
+                    },
+                    "isPublic": {
+                        "type": "string"
+                    },
+                    "users_saved_id": {
+                        "type": []
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "Tweet"
+                }
+            },
+            "Comment": {
+                "type": "object",
+                "required": ["author_id", "comment"],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "author_id": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "type": "object"
+                    },
+                    "tweet_id": {
+                        "type": "string"
+                    },
+                    "tweet": {
+                        "type": "object"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "likes": {
+                        "type": "number",
+                        "default": 0
+                    },
+                    "liked_users_id": {
+                        "type": []
+                    },
+                    "image": {
+                        "type": "string",
+                        "default": null
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "Comment"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "required": ["name", "email", "password"],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "number"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Tweet": {
+            "type": "object",
+            "required": ["author_id", "isPublic", "content"],
+            "properties": {
+                "author_id": {
+                    "type": "string"
+                },
+                "isPublic": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Tweet"
+            }
+        },
+        "Comment": {
+            "type": "object",
+            "required": ["author_id", "comment"],
+            "properties": {
+                "author_id": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Project"
+            }
+        }
+    }
+}
