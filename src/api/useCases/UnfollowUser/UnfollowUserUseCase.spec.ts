@@ -3,7 +3,7 @@ import { User } from "../../entities/User";
 import { IUser } from "../../interfaces/User";
 import { UnfollowUserUseCase } from "./UnfollowUserUseCase";
 
-describe("#FollowerUser", () => {
+describe("#UnfollowUser", () => {
     it("Shouldn't unfollow a user if is not found", async () => {
         const inMemoryUsersRepository = new InMemoryUsersRepository();
         const sut = new UnfollowUserUseCase(inMemoryUsersRepository);
@@ -68,6 +68,8 @@ describe("#FollowerUser", () => {
             id: "1",
             name: "Jorkis",
             followers: [] as User[],
+            followers_id: [] as string[],
+            following_id: ["2"] as string[],
             following: [
                 {
                     id: "2",
@@ -84,9 +86,13 @@ describe("#FollowerUser", () => {
                 {
                     id: "1",
                     name: "Jorkis",
+                    followers: [] as User[],
+                    following: [] as User[],
                 },
-            ],
+            ] as User[],
             following: [] as User[],
+            following_id: [] as string[],
+            followers_id: ["1"] as string[],
         };
 
         inMemoryUsersRepository.items.push(user as IUser);
@@ -100,5 +106,38 @@ describe("#FollowerUser", () => {
         expect(response).toBeUndefined();
         expect(inMemoryUsersRepository.items[0].following.length).toEqual(0);
         expect(inMemoryUsersRepository.items[1].followers.length).toEqual(0);
+    });
+
+    it("Shouldn't be able to unfollow a user if already don't following it.", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new UnfollowUserUseCase(inMemoryUsersRepository);
+        const user = {
+            id: "1",
+            name: "Jorkis",
+            followers: [] as User[],
+            followers_id: [] as string[],
+            following_id: [] as string[],
+            following: [] as IUser[],
+        };
+        const userToUnfollow = {
+            id: "2",
+            name: "Jorkis",
+            followers: [] as User[],
+            following: [] as User[],
+            following_id: [] as string[],
+            followers_id: [] as string[],
+        };
+
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userToUnfollow as IUser);
+
+        const response = sut.execute({
+            userId: user.id,
+            id: userToUnfollow.id,
+        });
+
+        await expect(response).rejects.toEqual(
+            new Error("You already don't follow this user."),
+        );
     });
 });
