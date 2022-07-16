@@ -100,13 +100,6 @@ export class User extends BaseEntity {
 
     @Column({
         type: "uuid",
-        array: true,
-        default: [],
-    })
-    retweets_id!: string[];
-
-    @Column({
-        type: "uuid",
         default: [],
         array: true,
     })

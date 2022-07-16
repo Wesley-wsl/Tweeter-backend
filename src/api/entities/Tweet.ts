@@ -5,8 +5,6 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    JoinTable,
-    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -43,25 +41,6 @@ export class Tweet extends BaseEntity {
         array: true,
     })
     liked_users_id!: string[];
-
-    @Column({
-        type: "uuid",
-        array: true,
-        default: [],
-    })
-    retweets_id!: string[];
-
-    @ManyToMany(() => Tweet)
-    @JoinTable({
-        name: "retweets_id",
-    })
-    retweet!: Tweet[];
-
-    @Column({
-        type: "uuid",
-        nullable: true,
-    })
-    tweet_id: string;
 
     @Column({
         nullable: true,
