@@ -18,7 +18,11 @@ AppDataSource.initialize();
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    }),
+);
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 app.use("/files", express.static(resolve(__dirname, "..", "uploads")));
