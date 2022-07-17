@@ -15,7 +15,6 @@ export class ShowTweetsUseCase {
     }: IShowTweetsDTO): Promise<IPaginatedResponse<Tweet>> {
         let tweets = await this.tweetsRepository.findAllTweets(search);
 
-        if (!tweets) throw new Error("Tweets not fond");
         if (filter === "media")
             tweets = tweets.filter(tweet => tweet.image !== null);
 
