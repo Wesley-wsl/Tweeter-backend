@@ -12,7 +12,9 @@ describe("#FollowerUser", () => {
             id: "2",
             name: "Jorkis",
             followers: [] as User[],
+            followers_id: [] as string[],
             following: [] as User[],
+            following_id: [] as string[],
             followingCount: 0,
             followersCount: 0,
         };
@@ -22,6 +24,8 @@ describe("#FollowerUser", () => {
             name: "Jorkis",
             following: [] as User[],
             followers: [] as User[],
+            following_id: [] as string[],
+            followers_id: [] as string[],
             followingCount: 0,
             followersCount: 0,
         };
@@ -117,5 +121,31 @@ describe("#FollowerUser", () => {
         const response = sut.execute({ userId: user.id, id: userToFollow.id });
 
         await expect(response).rejects.toEqual(new Error("Follower not found"));
+    });
+
+    it("Shouldn't follow if already is follow", async () => {
+        const inMemoryUsersRepository = new InMemoryUsersRepository();
+        const sut = new FollowerUserUseCase(inMemoryUsersRepository);
+
+        const user = {
+            id: "1",
+            name: "Jorkis",
+        };
+
+        const userToFollow = {
+            id: "2",
+            name: "Jorkis",
+            followers_id: [user.id],
+            followers: [] as User[],
+        };
+
+        inMemoryUsersRepository.items.push(user as IUser);
+        inMemoryUsersRepository.items.push(userToFollow as IUser);
+
+        const response = sut.execute({ userId: user.id, id: userToFollow.id });
+
+        await expect(response).rejects.toEqual(
+            new Error("You already follow this user."),
+        );
     });
 });
