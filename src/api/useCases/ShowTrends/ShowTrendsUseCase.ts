@@ -1,4 +1,3 @@
-/* eslint-disable no-plusplus */
 import { PostgresTweetsRepository } from "../../repositories/implementations/PostgresTweetsRepository";
 
 interface IObjectTrends {
