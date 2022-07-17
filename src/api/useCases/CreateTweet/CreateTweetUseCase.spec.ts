@@ -1,6 +1,5 @@
 import { InMemoryTweetsRepository } from "../../../tests/repositories/In-memory-tweets-repository";
 import { InMemoryUsersRepository } from "../../../tests/repositories/In-memory-users-repository";
-import { User } from "../../entities/User";
 import { IUser } from "../../interfaces/User";
 import { CreateTweetUseCase } from "./CreateTweetUseCase";
 
